@@ -18,9 +18,9 @@ export function MobileNav() {
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left">
-        <SheetTitle className="font-display text-head-sm font-extrabold">Lowtide</SheetTitle>
-        <SheetDescription>Main navigation</SheetDescription>
+      <SheetContent side="left" className="w-72 border-none bg-primary p-6 text-primary-foreground">
+        <SheetTitle className="font-display text-head-sm font-extrabold text-primary-foreground">Lowtide</SheetTitle>
+        <SheetDescription className="sr-only">Main navigation</SheetDescription>
         <nav aria-label="Main" className="flex flex-col gap-2">
           {navItems.map(({ label, href, icon: Icon, active }) => (
             <Link

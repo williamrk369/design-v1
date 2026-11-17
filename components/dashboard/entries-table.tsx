@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDuration, type Dashboard, type EntryStatus } from "@/lib/dashboard-data";
 import { EmptyNote, Meta, WidgetError } from "./states";
@@ -16,19 +16,22 @@ const STATUS: Record<EntryStatus, { label: string; variant: "default" | "outline
 
 export function EntriesTable({ entries }: { entries: Dashboard["entries"] }) {
   return (
-    <Card aria-labelledby="entries-title">
+    <Card role="region" aria-labelledby="entries-title">
       <CardHeader>
-        <div className="flex flex-col gap-2">
-          <Meta>{entries.status === "ok" && entries.data.length ? "5 of 23 last week" : "Last week"}</Meta>
-          <CardTitle id="entries-title">Recent time entries</CardTitle>
-        </div>
+        <Meta>{entries.status === "ok" && entries.data.length ? "5 of 23 last week" : "Last week"}</Meta>
+        <CardTitle>
+          <h2 id="entries-title">Recent time entries</h2>
+        </CardTitle>
         {entries.status === "ok" && entries.data.length ? (
-          <Button variant="outline" size="sm">
-            Full timesheet
-          </Button>
+          <CardAction>
+            <Button variant="outline" size="sm">
+              Full timesheet
+            </Button>
+          </CardAction>
         ) : null}
       </CardHeader>
 
+      <CardContent>
       {entries.status === "error" ? (
         <WidgetError message={entries.message} detail={entries.detail} />
       ) : entries.data.length === 0 ? (
@@ -108,6 +111,7 @@ export function EntriesTable({ entries }: { entries: Dashboard["entries"] }) {
           </ul>
         </>
       )}
+      </CardContent>
     </Card>
   );
 }

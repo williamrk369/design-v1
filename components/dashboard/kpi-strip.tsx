@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import type { Dashboard } from "@/lib/dashboard-data";
 import { Meta, WidgetError } from "./states";
 
@@ -8,8 +8,10 @@ import { Meta, WidgetError } from "./states";
 export function KpiStrip({ summary, rangeLabel }: { summary: Dashboard["summary"]; rangeLabel: string }) {
   if (summary.status === "error") {
     return (
-      <Card aria-label="Summary">
-        <WidgetError message={summary.message} detail={summary.detail} />
+      <Card role="region" aria-label="Summary">
+        <CardContent>
+          <WidgetError message={summary.message} detail={summary.detail} />
+        </CardContent>
       </Card>
     );
   }
@@ -40,7 +42,8 @@ export function KpiStrip({ summary, rangeLabel }: { summary: Dashboard["summary"
   ];
 
   return (
-    <Card aria-label="Summary" className="grid gap-6 sm:grid-cols-3 sm:gap-8">
+    <Card role="region" aria-label="Summary">
+      <CardContent className="grid gap-6 sm:grid-cols-3 sm:gap-8">
       {stats.map((s) => (
         <div key={s.label} className="flex flex-col gap-2">
           <Meta>{s.label}</Meta>
@@ -51,6 +54,7 @@ export function KpiStrip({ summary, rangeLabel }: { summary: Dashboard["summary"
           <p className="text-muted-foreground">{s.note}</p>
         </div>
       ))}
+      </CardContent>
     </Card>
   );
 }

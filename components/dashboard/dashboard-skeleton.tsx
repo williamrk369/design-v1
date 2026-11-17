@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Mirrors the populated layout block for block, so nothing jumps when data lands.
@@ -8,7 +8,8 @@ export function DashboardSkeleton() {
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]" aria-busy aria-label="Loading dashboard">
       <div className="flex min-w-0 flex-col gap-4">
-        <Card className="grid gap-6 sm:grid-cols-3 sm:gap-8">
+        <Card>
+          <CardContent className="grid gap-6 sm:grid-cols-3 sm:gap-8">
           {[0, 1, 2].map((i) => (
             <div key={i} className="flex flex-col gap-2">
               <Skeleton className="h-4 w-32" />
@@ -16,9 +17,11 @@ export function DashboardSkeleton() {
               <Skeleton className="h-4 w-40" />
             </div>
           ))}
+        </CardContent>
         </Card>
 
         <Card>
+          <CardContent className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <Skeleton className="h-4 w-40" />
             <Skeleton className="h-6 w-32" />
@@ -31,9 +34,11 @@ export function DashboardSkeleton() {
               </div>
             ))}
           </div>
+        </CardContent>
         </Card>
 
         <Card>
+          <CardContent className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-6 w-48" />
@@ -49,23 +54,29 @@ export function DashboardSkeleton() {
               </div>
             ))}
           </div>
+        </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:flex xl:flex-col">
         <Card>
+          <CardContent className="flex flex-col gap-6">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-12 w-24" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-2 w-full" />
+        </CardContent>
         </Card>
         <Card>
+          <CardContent className="flex flex-col gap-6">
           <Skeleton className="h-6 w-32" />
           {[0, 1, 2].map((i) => (
             <Skeleton key={i} className="h-12 w-full" />
           ))}
+        </CardContent>
         </Card>
         <Card className="md:col-span-2">
+          <CardContent className="flex flex-col gap-6">
           <Skeleton className="h-6 w-32" />
           {[0, 1, 2].map((i) => (
             <div key={i} className="grid grid-cols-[64px_1fr] gap-4">
@@ -76,6 +87,7 @@ export function DashboardSkeleton() {
               </div>
             </div>
           ))}
+        </CardContent>
         </Card>
       </div>
     </div>

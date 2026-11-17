@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Dashboard, DayHours } from "@/lib/dashboard-data";
 import { EmptyNote, Meta, WidgetError } from "./states";
 
@@ -71,14 +71,15 @@ export function HoursChart({ week, rangeLabel }: { week: Dashboard["week"]; rang
   const total = week.status === "ok" ? week.data.reduce((s, d) => s + d.hours, 0) : 0;
 
   return (
-    <Card aria-labelledby="hours-title">
-      <CardHeader className="flex-wrap">
-        <div className="flex flex-col gap-2">
-          <Meta>Week 46 · {rangeLabel}</Meta>
-          <CardTitle id="hours-title">Hours by day</CardTitle>
-        </div>
+    <Card role="region" aria-labelledby="hours-title">
+      <CardHeader>
+        <Meta className="col-start-1">Week 46 · {rangeLabel}</Meta>
+        <CardTitle className="col-start-1">
+          <h2 id="hours-title">Hours by day</h2>
+        </CardTitle>
         {week.status === "ok" && total > 0 ? (
-          <ul className="flex items-center gap-6 font-mono text-meta uppercase tracking-[0.08em] text-muted-foreground">
+          <CardAction className="col-start-1 row-span-1 row-start-3 justify-self-start sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:justify-self-end">
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-meta uppercase tracking-[0.08em] text-muted-foreground">
             <li className="flex items-center gap-2">
               <span className="size-4 rounded-control bg-foreground" aria-hidden /> This week
             </li>
@@ -86,8 +87,11 @@ export function HoursChart({ week, rangeLabel }: { week: Dashboard["week"]; rang
               <span className="h-0 w-6 border-t-2 border-dashed border-primary" aria-hidden /> Week before
             </li>
           </ul>
+          </CardAction>
         ) : null}
       </CardHeader>
+
+      <CardContent>
 
       {week.status === "error" ? (
         <WidgetError message={week.message} detail={week.detail} />
@@ -123,6 +127,7 @@ export function HoursChart({ week, rangeLabel }: { week: Dashboard["week"]; rang
           </figcaption>
         </figure>
       )}
+      </CardContent>
     </Card>
   );
 }

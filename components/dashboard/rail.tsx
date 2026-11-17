@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { BudgetAlert as Budget, Deadline, MonthRatio } from "@/lib/dashboard-data";
 import { EmptyNote, Meta } from "./states";
 
@@ -10,21 +10,28 @@ import { EmptyNote, Meta } from "./states";
 export function BudgetAlert({ budget }: { budget: Budget | null }) {
   if (!budget) {
     return (
-      <Card aria-label="Project budget">
-        <Meta>Project budget</Meta>
-        <EmptyNote title="No projects assigned yet" body="Budgets appear here once a project lead adds you to a project." />
+      <Card role="region" aria-label="Project budget">
+        <CardHeader>
+          <Meta>Project budget</Meta>
+        </CardHeader>
+        <CardContent>
+          <EmptyNote title="No projects assigned yet" body="Budgets appear here once a project lead adds you to a project." />
+        </CardContent>
       </Card>
     );
   }
   const pct = Math.round((budget.used / budget.budget) * 100);
   return (
-    <Card aria-label="Budget alert" className="bg-accent text-accent-foreground">
+    <Card role="region" aria-label="Budget alert" className="bg-accent text-accent-foreground">
       <CardHeader>
         <span className="font-mono text-meta font-extrabold uppercase tracking-[0.08em]">Budget alert</span>
-        <Button variant="outline" size="icon-sm" aria-label="Open project budget">
-          <ArrowUpRight strokeWidth={1.5} />
-        </Button>
+        <CardAction>
+          <Button variant="outline" size="icon-sm" aria-label="Open project budget">
+            <ArrowUpRight strokeWidth={1.5} />
+          </Button>
+        </CardAction>
       </CardHeader>
+      <CardContent className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <p className="font-display text-head font-extrabold">{pct}%</p>
         <p>
@@ -38,6 +45,7 @@ export function BudgetAlert({ budget }: { budget: Budget | null }) {
       <p className="font-mono text-meta uppercase tracking-[0.08em]">
         {budget.budget - budget.used} h left · {budget.daysLeft} days to the {budget.handoff} handoff
       </p>
+      </CardContent>
     </Card>
   );
 }
@@ -46,11 +54,14 @@ export function BudgetAlert({ budget }: { budget: Budget | null }) {
 export function BillableRatio({ months }: { months: MonthRatio[] }) {
   const target = 75;
   return (
-    <Card aria-labelledby="billable-title">
-      <div className="flex flex-col gap-2">
+    <Card role="region" aria-labelledby="billable-title">
+      <CardHeader>
         <Meta>Target {target}%</Meta>
-        <CardTitle id="billable-title">Billable ratio</CardTitle>
-      </div>
+        <CardTitle>
+          <h2 id="billable-title">Billable ratio</h2>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
       {months.length === 0 ? (
         <EmptyNote title="Not enough time logged" body="Your billable ratio appears after your first full week of logged time." />
       ) : (
@@ -72,6 +83,7 @@ export function BillableRatio({ months }: { months: MonthRatio[] }) {
           ))}
         </ul>
       )}
+      </CardContent>
     </Card>
   );
 }
@@ -79,11 +91,14 @@ export function BillableRatio({ months }: { months: MonthRatio[] }) {
 // Reference: "My Events". Big date numerals carry the hierarchy, not boxes.
 export function Deadlines({ items }: { items: Deadline[] }) {
   return (
-    <Card aria-labelledby="deadlines-title">
-      <div className="flex flex-col gap-2">
+    <Card role="region" aria-labelledby="deadlines-title">
+      <CardHeader>
         <Meta>Nov 17 – 30</Meta>
-        <CardTitle id="deadlines-title">Next deadlines</CardTitle>
-      </div>
+        <CardTitle>
+          <h2 id="deadlines-title">Next deadlines</h2>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
       {items.length === 0 ? (
         <EmptyNote title="Nothing due in the next 14 days" body="Deadlines from your projects appear here two weeks ahead." />
       ) : (
@@ -102,6 +117,7 @@ export function Deadlines({ items }: { items: Deadline[] }) {
           ))}
         </ol>
       )}
+      </CardContent>
     </Card>
   );
 }

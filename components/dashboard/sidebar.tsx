@@ -36,7 +36,7 @@ export function Sidebar({ initials }: { initials?: string }) {
 
       <div className="flex flex-col items-center gap-4">
         <Avatar>
-          <AvatarFallback>{initials ?? ""}</AvatarFallback>
+          <AvatarFallback className="bg-background text-foreground">{initials ?? ""}</AvatarFallback>
         </Avatar>
         <button
           type="button"

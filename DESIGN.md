@@ -233,7 +233,15 @@ The rule: if a component in this table covers ≥80% of the need, **extend it wi
 
 ### 5b. shadcn/ui primitives
 
-Install each one on demand with `npx shadcn@latest add <name>`. **Installed so far:** button (+ `surface` variant), input, card, table, skeleton, badge, avatar, sheet. These were written from shadcn's source by hand because `ui.shadcn.com` is blocked from the cloud sandbox; run the CLI locally to diff them against upstream. Once installed, it is imported from the path shown and never re-implemented by hand. Restyle through the tokens in §2, not by editing classes in each component.
+Install each one on demand with `npx shadcn@latest add <name>`. `components.json` uses the **radix-nova** style (`--base radix`), so primitives come from the `radix-ui` package and keep the `asChild` API.
+
+**Adding a component is a two-step job.** Upstream classes (`text-sm`, `font-medium`, `rounded-lg`, `shadow-lg`, `h-8` buttons, `ring-1` card borders) do not exist in this theme, so after `add`:
+1. Change its import from `"cn"` back to `@/lib/utils` and don't add the `cn` package. The CLI rewrites imports to it, but `@/lib/utils` is what knows the custom type scale.
+2. Restyle class values only, keeping upstream structure, data attributes and states, and note the changes in a comment at the top of the file.
+
+**Installed (upstream radix-nova, restyled):** button (+ `accent`, `surface`; no `xs` sizes), input, card, table (no row hover), skeleton, badge (+ `muted`), avatar, sheet. Don't re-run `shadcn init` on this repo: it overwrites `globals.css` with neutral tokens, adds Geist, and writes a self-referencing `--font-sans`.
+
+Card anatomy is upstream's: `Card` (add `role="region"` + a label) > `CardHeader` [`Meta`, `CardTitle` wrapping an `h2`, `CardAction`] > `CardContent`. The card pads its children, not itself.
 
 | Primitive | Import |
 |---|---|
