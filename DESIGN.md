@@ -21,6 +21,8 @@ Because nothing existed to derive from, I chose every value below. Nothing was i
 2. **Path alias `@/*` points to the project root.** This is shadcn's default, so primitives resolve to `@/components/ui/*`.
 3. **Light mode comes first and dark mode is fully specified.** Both themes use the same two hues.
 
+**Update 2026-11-17 (dashboard build):** the stack assumption is now real: Next.js 16.4, React 19.3, Tailwind 4.3. `app/globals.css` implements §2 and also *wipes* Tailwind's default type, weight, shadow and radius scales (`--text-*: initial` etc.), so off-system classes like `text-xl`, `font-semibold`, `shadow-md` and `rounded-xl` do not compile to anything. The allowed classes are `text-meta|body|head-sm|head|hero-sm|hero`, `font-extralight|normal|extrabold`, `shadow-float`, `rounded-control|full`.
+
 **Re-audit rule:** before each UI task I re-read `package.json`, `app/globals.css` and `components/`, and I update §5 when the code no longer matches this file.
 
 ---
@@ -38,12 +40,12 @@ Load them with `next/font/google` in `app/layout.tsx` and expose them as CSS var
 ```ts
 // app/layout.tsx
 import { Fraunces, Manrope, JetBrains_Mono } from "next/font/google";
-const display = Fraunces({ subsets: ["latin"], weight: ["200", "800"], axes: ["opsz"], variable: "--font-display" });
-const body    = Manrope({ subsets: ["latin"], weight: ["200", "400", "800"], variable: "--font-body" });
-const mono    = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "800"], variable: "--font-mono" });
+// Variable fonts: no `weight`. Loader variables must NOT share a name with the
+// Tailwind theme variables (--font-display etc.), or the theme value references itself.
+const fraunces  = Fraunces({ subsets: ["latin"], axes: ["opsz"], variable: "--font-fraunces" });
+const manrope   = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
+const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 ```
-
-(`next/font` won't accept `weight` together with `axes`. If it errors, drop `weight` and load the variable font.)
 
 ### NEVER use these fonts
 
@@ -135,9 +137,9 @@ Every neutral is a tint or shade of Pine, never a third hue. Nothing else is all
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
 
-  --font-display: var(--font-display), serif;
-  --font-sans:    var(--font-body), sans-serif;    /* overrides Tailwind's system-ui stack */
-  --font-mono:    var(--font-mono), monospace;
+  --font-display: var(--font-fraunces), serif;
+  --font-sans:    var(--font-manrope), sans-serif;  /* overrides Tailwind's system-ui stack */
+  --font-mono:    var(--font-jetbrains), monospace;
 
   --radius-sm: var(--radius);
   --radius-md: var(--radius);
@@ -216,13 +218,22 @@ There are **three sizes for hierarchy, 3× apart,** plus one size for metadata. 
 
 | Component | Import path | Purpose | Notes |
 |---|---|---|---|
-| *(empty: repo had no components on 2026-11-17)* | | | |
+| `Shell` | `@/components/dashboard/shell` | Page frame: rail + top bar over a muted canvas | Pass `firstName` etc.; omit them for the loading state |
+| `Sidebar` | `@/components/dashboard/sidebar` | Pine icon rail, ≥1024px | Items come from `nav-items.ts` |
+| `MobileNav` | `@/components/dashboard/mobile-nav` | Sheet with the same items, <1024px | Client component |
+| `Topbar` | `@/components/dashboard/topbar` | Greeting, view switch, search, notifications, date | Shows skeletons when `firstName` is missing |
+| `KpiStrip` | `@/components/dashboard/kpi-strip` | Three figures in **one** card | The answer to "three cards in a row" |
+| `HoursChart` | `@/components/dashboard/hours-chart` | Block-stack bars, 1 block = 2 h, dashed week-before line | Has empty and error states |
+| `EntriesTable` | `@/components/dashboard/entries-table` | 48px table rows ≥768px, list items below | Long text: one line + `title`, three lines on mobile |
+| `BudgetAlert`, `BillableRatio`, `Deadlines` | `@/components/dashboard/rail` | Right-rail widgets | `BudgetAlert` is the screen's one Signal element |
+| `WidgetError`, `EmptyNote`, `Meta` | `@/components/dashboard/states` | Error, empty and 12px mono label patterns | Reuse for every new widget |
+| `DashboardSkeleton` | `@/components/dashboard/dashboard-skeleton` | Loading layout, block for block | Used by `app/loading.tsx` and `?state=loading` |
 
 The rule: if a component in this table covers ≥80% of the need, **extend it with a prop or variant**. Don't fork it or hand-roll a near-duplicate.
 
 ### 5b. shadcn/ui primitives
 
-Install each one on demand with `npx shadcn@latest add <name>`. Once installed, it is imported from the path shown and never re-implemented by hand. Restyle through the tokens in §2, not by editing classes in each component.
+Install each one on demand with `npx shadcn@latest add <name>`. **Installed so far:** button (+ `surface` variant), input, card, table, skeleton, badge, avatar, sheet. These were written from shadcn's source by hand because `ui.shadcn.com` is blocked from the cloud sandbox; run the CLI locally to diff them against upstream. Once installed, it is imported from the path shown and never re-implemented by hand. Restyle through the tokens in §2, not by editing classes in each component.
 
 | Primitive | Import |
 |---|---|

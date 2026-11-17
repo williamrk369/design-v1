@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* Tokens come from DESIGN.md §2. Components read the semantic roles, never the raw hues. */
+:root {
+  /* the only two hues */
+  --pine: #123b2e;
+  --signal: #ff5b1f;
+
+  /* neutrals derived from pine */
+  --paper: #f4f0e6;
+  --ink: #0c1a15;
+  --ink-muted: #5b6b63;
+  --rule: color-mix(in oklab, var(--ink) 16%, transparent);
+
+  /* semantic roles */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --primary: var(--pine);
+  --primary-foreground: var(--paper);
+  --accent: var(--signal);
+  --accent-foreground: var(--ink);
+  --muted: color-mix(in oklab, var(--pine) 6%, var(--paper));
+  --muted-foreground: var(--ink-muted);
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--signal);
+  --destructive: var(--signal);
+
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--muted);
+  --secondary-foreground: var(--foreground);
+
+  --radius: 0.25rem;
+}
+
+/* Put .dark on <html>: the role tokens above resolve against these. */
+.dark {
+  --paper: #0a1f18;
+  --ink: #e8e2d3;
+  --ink-muted: #9aa89f;
+  --primary: var(--signal);
+  --primary-foreground: #0c1a15;
+  --accent: var(--signal);
+  --accent-foreground: #0c1a15;
+}
+
+/* Scales are wiped and re-declared so off-system classes (text-xl, font-semibold,
+   shadow-md, rounded-xl) do not exist at all. DESIGN.md §3, §4, §6. */
+@theme {
+  --text-*: initial;
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-head-sm: 2rem; /* mobile heading: 2x body, DESIGN.md §4 */
+  --text-head-sm--line-height: 2rem;
+  --text-head: 3rem;
+  --text-head--line-height: 3rem;
+  --text-hero-sm: 6rem;
+  --text-hero-sm--line-height: 6rem;
+  --text-hero: 9rem;
+  --text-hero--line-height: 8rem;
+
+  --font-weight-*: initial;
+  --font-weight-extralight: 200;
+  --font-weight-normal: 400;
+  --font-weight-extrabold: 800;
+
+  --shadow-*: initial;
+  --shadow-float: 8px 8px 0 var(--ink);
+
+  --radius-*: initial;
+  --radius-control: var(--radius);
+  --radius-full: 9999px; /* avatars and status dots only */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  /* overrides Tailwind's system-ui stack */
+  --font-display: var(--font-fraunces), serif;
+  --font-sans: var(--font-manrope), sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    font-family: var(--font-manrope), sans-serif;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
